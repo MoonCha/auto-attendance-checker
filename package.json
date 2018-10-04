@@ -1,0 +1,32 @@
+{
+  "name": "auto-coinpan-attendance",
+  "version": "1.0.0",
+  "description": "Login to coinpan.com daily automatically",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/MoonCall/coinpan-auto-login.git"
+  },
+  "keywords": [
+    "headless",
+    "auto",
+    "login"
+  ],
+  "author": "MoonCall",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MoonCall/coinpan-auto-login/issues"
+  },
+  "homepage": "https://github.com/MoonCall/coinpan-auto-login#readme",
+  "dependencies": {
+    "puppeteer": "^1.8.0"
+  },
+  "devDependencies": {
+    "@types/puppeteer": "^1.8.0",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.1"
+  }
+}
