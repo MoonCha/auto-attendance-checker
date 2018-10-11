@@ -1,2 +1,1 @@
-# Coinpan Auto Login
-
+# Site Auto Attendance Checker

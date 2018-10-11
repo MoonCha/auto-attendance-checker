@@ -1,72 +1,35 @@
-import * as puppeteer from 'puppeteer';
-import config from './config';
+import config from './src/config';
+import * as coinpan from './src/coinpan';
 
-async function loginCoinpanAndCheckAttendance(): Promise<void> {
-    try {
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36');
-        await page.goto('https://www.coinpan.com');
-    
-        await page.type('input.idpw_id', config.COINPAN_ID);
-        await page.type('input.idpw_pass', config.COINPAN_PASSWORD);
-    
-        page.on('dialog', async function (dialog) {
-            console.log(dialog.message());
-            await dialog.dismiss();
-            await browser.close();
+const trialFuncMap = {
+    COINPAN: coinpan.loginCoinpanAndCheckAttendance,
+};
+
+const targetSiteList = config.COMMA_SPLITED_TARGET_SITE_LIST.split(',');
+const targetTrialList: { siteName: string, try: () => Promise<void> }[] = [];
+for (const targetSite of targetSiteList) {
+    const trialFunc = trialFuncMap[targetSite];
+    if (trialFunc != null) {
+        targetTrialList.push({
+            siteName: targetSite,
+            try: trialFunc
         });
-
-        await page.evaluate(() => {
-            (document.querySelector('.loginbutton > input[type="submit"]') as HTMLElement).click();
-        });
-
-        await page.waitForNavigation({
-            waitUntil: 'domcontentloaded',
-        });
-
-        await page.goto('https://coinpan.com/attendance');
-
-        const pageContent = await page.content();
-        const loginCheckKeyword = '로그인을 하지 않았습니다.';
-        if (pageContent.indexOf(loginCheckKeyword) !== -1) {
-            await browser.close();
-            console.error("Failed to login");
-            return;
-        }
-        const attendanceCheckKeyword = '출석이 완료되었습니다.';
-        if (pageContent.indexOf(attendanceCheckKeyword) !== -1) {
-            console.log(`attendanceCheckKeyword(${attendanceCheckKeyword}) was found on page. skip button click process`);
-        } else {
-            const reportAttendanceButtonSelector = '#greetings + button';
-            await page.waitForSelector(reportAttendanceButtonSelector).catch(function () {
-                console.log(`waitForSelector('${reportAttendanceButtonSelector}') Timeout: maybe attendance already checked`);
-            });
-    
-            await page.evaluate(() => {
-                (document.querySelector(reportAttendanceButtonSelector) as HTMLElement).click();
-            });
-        }
-        await browser.close();
-    } catch (err) {
-        console.log(err);
+    } else {
+        console.error(`Invalid target site: ${targetSite}`);
     }
 }
 
-function reserveLoopingTrial(): void {
-    const tryLoginCoinpanAndCheckAttendanceThenReserveTrial = function () {
-        loginCoinpanAndCheckAttendance()
-        .then(function () {
-            console.log(`DONE: ${new Date()}`)
-            setTimeout(tryLoginCoinpanAndCheckAttendanceThenReserveTrial, config.LOGIN_TRIAL_CYCLE_MSEC);
-        })
-        .catch(function (err) {
+async function loopTrialList() {
+    for (const targetTrial of targetTrialList) {
+        try {
+            await targetTrial.try();
+        } catch (err) {
             console.error(err);
-            console.error(`FAILED: ${new Date()}`)
-            setTimeout(tryLoginCoinpanAndCheckAttendanceThenReserveTrial, config.LOGIN_TRIAL_CYCLE_MSEC);
-        });
-    };
-    tryLoginCoinpanAndCheckAttendanceThenReserveTrial();
+        }
+        console.log(`Trial(${targetTrial.siteName}) done: ${new Date()}`);
+    }
+    console.log(`All trial done. next trial will occur in ${config.LOGIN_TRIAL_CYCLE_MSEC / 1000} seconds`);
+    setTimeout(loopTrialList, config.LOGIN_TRIAL_CYCLE_MSEC);
 }
 
-reserveLoopingTrial();
+loopTrialList();
