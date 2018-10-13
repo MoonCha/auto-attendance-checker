@@ -16,10 +16,8 @@ export async function loginInvenAndCheckAttendance(): Promise<void> {
         await browser.close();
     });
 
-    await page.evaluate(() => {
-        (document.querySelector('#comLeftLoginForm button.btn_submit') as HTMLElement).click();
-    });
-
+    const loginButton = await page.waitForSelector('#comLeftLoginForm button.btn_submit');
+    loginButton.click();
     await page.waitForNavigation({
         waitUntil: 'domcontentloaded',
     });

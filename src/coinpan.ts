@@ -16,10 +16,8 @@ export async function loginCoinpanAndCheckAttendance(): Promise<void> {
         await browser.close();
     });
 
-    await page.evaluate(() => {
-        (document.querySelector('.loginbutton > input[type="submit"]') as HTMLElement).click();
-    });
-
+    const loginButton = await page.waitForSelector('.loginbutton > input[type="submit"]');
+    loginButton.click();
     await page.waitForNavigation({
         waitUntil: 'domcontentloaded',
     });
