@@ -34,13 +34,8 @@ export async function loginCoinpanAndCheckAttendance(): Promise<void> {
     if (pageContent.indexOf(attendanceCheckKeyword) !== -1) {
         console.log(`attendanceCheckKeyword(${attendanceCheckKeyword}) was found on page. skip button click process`);
     } else {
-        const attendanceButton = await page.waitForSelector('#greetings + button');
-        await attendanceButton.click();
+        await page.click('#greetings + button');
     }
 
     await browser.close();
-}
-
-function isElementHandle(target: void | puppeteer.ElementHandle<Element>): target is puppeteer.ElementHandle<Element> {
-    return target ? true : false;
 }

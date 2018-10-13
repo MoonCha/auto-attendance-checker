@@ -36,8 +36,7 @@ export async function loginInvenAndCheckAttendance(): Promise<void> {
             }
             const passwordChangeOfferKeyword = '비밀번호를 변경해주시기 바랍니다.';
             if (pageContent.indexOf(passwordChangeOfferKeyword) !== -1) {
-                const postponeButton = await page.waitForSelector('#btn-extend');
-                await postponeButton.click();
+                const postponeButton = await page.click('#btn-extend');
             }
             try {
                 const modalOkButton = await page.waitForSelector('.modal-dialog #btn-ok', {
@@ -50,7 +49,9 @@ export async function loginInvenAndCheckAttendance(): Promise<void> {
             break;
         case 'hs.inven.co.kr':
             try {
-                await page.waitForSelector('#hsLeftLogin .logout');
+                await page.waitForSelector('#hsLeftLogin .logout', {
+                    timeout: 5000,
+                });
             } catch (err) {
                 console.error(err);
                 throw new Error('Failed to login');
@@ -71,8 +72,7 @@ export async function loginInvenAndCheckAttendance(): Promise<void> {
         await dialog.dismiss();
     });
 
-    const attendanceCheckButton = await page.waitForSelector('div.attendBttn > a');
-    await attendanceCheckButton.click();
+    await page.click('div.attendBttn > a');
 
     const votePageLinkButton = await page.waitForSelector('div.voteBttn > a');
     const buttonHrefProperty = await votePageLinkButton.getProperty('href');
@@ -89,10 +89,8 @@ export async function loginInvenAndCheckAttendance(): Promise<void> {
         }
     }
     if (voteIframe != null) {
-        const firstGameCheckboxInput = await voteIframe.waitForSelector('.voteoption input');
-        await firstGameCheckboxInput.click();
-        const voteButton = await voteIframe.waitForSelector('#vote_opinionWrap .vote a');
-        await voteButton.click();
+        await voteIframe.click('.voteoption input');
+        await voteIframe.click('#vote_opinionWrap .vote a');
     } else {
         await browser.close();
         throw new Error('Vote page iframe not found');
