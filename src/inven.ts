@@ -67,7 +67,7 @@ export async function loginInvenAndCheckAttendance(): Promise<void> {
 
     page.removeAllListeners('dialog');
     page.on('dialog', async function (dialog) {
-        console.log(dialog.message());
+        console.log(`Dialog message: ${dialog.message()}`);
         await dialog.dismiss();
     });
 
