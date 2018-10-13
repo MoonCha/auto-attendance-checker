@@ -1,8 +1,10 @@
 import config from './src/config';
 import * as coinpan from './src/coinpan';
+import * as inven from './src/inven';
 
 const trialFuncMap = {
     COINPAN: coinpan.loginCoinpanAndCheckAttendance,
+    INVEN: inven.loginInvenAndCheckAttendance,
 };
 
 const targetSiteList = config.COMMA_SPLITED_TARGET_SITE_LIST.split(',');
