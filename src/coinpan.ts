@@ -12,8 +12,13 @@ export async function loginCoinpanAndCheckAttendance(): Promise<void> {
 
     page.on('dialog', async function (dialog) {
         console.log(`Dialog message: ${dialog.message()}`);
-        await dialog.dismiss();
-        await browser.close();
+        try {
+            await dialog.dismiss();
+            await browser.close();
+        } catch (err) {
+            console.error(err);
+            console.error('Failed to close browser');
+        }
     });
 
     const loginButton = await page.waitForSelector('.loginbutton > input[type="submit"]');

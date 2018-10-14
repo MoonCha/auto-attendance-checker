@@ -12,8 +12,13 @@ export async function loginInvenAndCheckAttendance(): Promise<void> {
 
     page.on('dialog', async function (dialog) {
         console.log(`Dialog message: ${dialog.message()}`);
-        await dialog.dismiss();
-        await browser.close();
+        try {
+            await dialog.dismiss();
+            await browser.close();
+        } catch (err) {
+            console.error(err);
+            console.error('Failed to close browser');
+        }
     });
 
     const loginButton = await page.waitForSelector('#comLeftLoginForm button.btn_submit');
@@ -69,7 +74,12 @@ export async function loginInvenAndCheckAttendance(): Promise<void> {
     page.removeAllListeners('dialog');
     page.on('dialog', async function (dialog) {
         console.log(`Dialog message: ${dialog.message()}`);
-        await dialog.dismiss();
+        try {
+            await dialog.dismiss();
+        } catch (err) {
+            console.error(err);
+            console.error('Failed to dismiss browser');
+        }
     });
 
     await page.click('div.attendBttn > a');
