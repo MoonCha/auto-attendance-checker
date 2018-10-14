@@ -23,6 +23,7 @@ for (const targetSite of targetSiteList) {
 
 async function loopTrialList() {
     for (const targetTrial of targetTrialList) {
+        console.log(`Start trial(${targetTrial.siteName})`);
         try {
             await targetTrial.try();
         } catch (err) {
