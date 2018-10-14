@@ -82,7 +82,8 @@ export async function loginInvenAndCheckAttendance(): Promise<void> {
         }
     });
 
-    await page.click('div.attendBttn > a');
+    const attendButton = await page.waitForSelector('div.attendBttn > a');
+    await attendButton.click();
 
     const votePageLinkButton = await page.waitForSelector('div.voteBttn > a');
     const buttonHrefProperty = await votePageLinkButton.getProperty('href');
