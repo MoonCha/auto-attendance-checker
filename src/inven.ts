@@ -7,8 +7,10 @@ export async function loginInvenAndCheckAttendance(): Promise<void> {
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36');
     await page.goto('http://hs.inven.co.kr/');
 
-    await page.type('input#comLeftLoginId', config.INVEN_ID);
-    await page.type('input#comLoginPassword', config.INVEN_PASSWORD);
+    const loginIdInput = await page.waitForSelector('input#comLeftLoginId');
+    loginIdInput.type(config.INVEN_ID);
+    const loginPwInput = await page.waitForSelector('input#comLoginPassword');
+    loginPwInput.type(config.INVEN_PASSWORD);
 
     page.on('dialog', async function (dialog) {
         console.log(`Dialog message: ${dialog.message()}`);
