@@ -8,9 +8,9 @@ export async function loginInvenAndCheckAttendance(): Promise<void> {
     await page.goto('http://hs.inven.co.kr/');
 
     const loginIdInput = await page.waitForSelector('input#comLeftLoginId');
-    loginIdInput.type(config.INVEN_ID);
+    await loginIdInput.type(config.INVEN_ID);
     const loginPwInput = await page.waitForSelector('input#comLoginPassword');
-    loginPwInput.type(config.INVEN_PASSWORD);
+    await loginPwInput.type(config.INVEN_PASSWORD);
 
     page.on('dialog', async function (dialog) {
         console.log(`Dialog message: ${dialog.message()}`);
@@ -38,12 +38,12 @@ export async function loginInvenAndCheckAttendance(): Promise<void> {
             const loginFailureCheckKeyword = '로그인 정보가 일치하지 않습니다.';
             if (pageContent.indexOf(loginFailureCheckKeyword) !== -1) {
                 await browser.close();
-                console.error('Failed to login');
+                console.error('Failed to login - invalid login info');
                 return;
             }
             const passwordChangeOfferKeyword = '비밀번호를 변경해주시기 바랍니다.';
             if (pageContent.indexOf(passwordChangeOfferKeyword) !== -1) {
-                const postponeButton = await page.click('#btn-extend');
+                await page.click('#btn-extend');
             }
             try {
                 const modalOkButton = await page.waitForSelector('.modal-dialog #btn-ok', {
