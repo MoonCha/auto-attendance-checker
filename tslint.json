@@ -1,0 +1,58 @@
+{
+    // "extends": "tslint-config-airbnb",
+    "jsEnable": false,
+    "rules": {
+      "ter-prefer-arrow-callback": false,
+      "align": false,
+      "max-line-length": {
+        "options": [2500]
+      },
+      "quotemark": false,
+      "no-var-keyword": true,
+      "prefer-const": [true, {"destructuring": "all"}],
+      "no-increment-decrement": false,
+      "triple-equals": [false, "allow-null-check"],
+      "function-name": false,
+      "import-name": false,
+      "object-literal-shorthand": [true, "never"],
+      "trailing-comma": [true, {
+        "multiline": {
+          "objects": "always",
+          "arrays": "always",
+          "functions": "never",
+          "typeLiterals": "ignore"
+        },
+        "singleline": "never"
+      }],
+      "strict-boolean-expressions": false,
+      "variable-name": false,
+      "prefer-array-literal": false,
+      "no-this-assignment": [true, {
+        "allowed-names": ["^self$"]
+      }],
+      "no-parameter-reassignment": false,
+      "one-variable-per-declaration": false,
+      "no-unnecessary-else": false,
+      "no-else-after-return": false,
+      "no-return-await": true,
+      "await-promise": true,
+      "switch-default": true,
+      "no-unused-expression": true,
+      "no-duplicate-imports": true,
+      "no-suspicious-comment": false,
+      "no-unnecessary-local-variable": false,
+      "no-unnecessary-semicolons": true,
+      "promise-must-complete": true,
+      "no-duplicate-case": true,
+      "no-constant-condition": true,
+      "no-conditional-assignment": true,
+      "no-empty": false,
+      "no-inner-declarations": [true , "functions"],
+      "no-magic-numbers": false,
+      "no-use-before-declare": true,
+      "handle-callback-err": [true, "^(err|error)"],
+      "no-empty-line-after-opening-brace": true,
+      "no-unsafe-finally": true
+    }
+  }
+  

@@ -1,0 +1,16 @@
+version: '2'
+services:
+  auto-attendance-checker:
+    image: auto-attendance-checker:latest
+    environment:
+      - COMMA_SPLITED_TARGET_SITE_LIST=COINPAN,INVEN
+      - COINPAN_ID=
+      - COINPAN_PASSWORD=
+      - INVEN_ID=
+      - INVEN_PASSWORD=
+      - LOGIN_TRIAL_CYCLE_MSEC=14400000
+    working_dir: /auto-attendance-checker
+    command: ts-node index.ts
+    restart: always
+
+

@@ -3,36 +3,39 @@ import * as coinpan from './src/coinpan';
 import * as inven from './src/inven';
 
 const trialFuncMap = {
-    COINPAN: coinpan.loginCoinpanAndCheckAttendance,
-    INVEN: inven.loginInvenAndCheckAttendance,
+  COINPAN: coinpan.loginCoinpanAndCheckAttendance,
+  INVEN: inven.loginInvenAndCheckAttendance,
 };
 
 const targetSiteList = config.COMMA_SPLITED_TARGET_SITE_LIST.split(',');
-const targetTrialList: { siteName: string, try: () => Promise<void> }[] = [];
+const targetTrialList: {
+  siteName: string,
+  try: () => Promise<void>
+} [] = [];
 for (const targetSite of targetSiteList) {
-    const trialFunc = trialFuncMap[targetSite];
-    if (trialFunc != null) {
-        targetTrialList.push({
-            siteName: targetSite,
-            try: trialFunc
-        });
-    } else {
-        console.error(`Invalid target site: ${targetSite}`);
-    }
+  const trialFunc = trialFuncMap[targetSite];
+  if (trialFunc != null) {
+    targetTrialList.push({
+      siteName: targetSite,
+      try: trialFunc,
+    });
+  } else {
+    console.error(`Invalid target site: ${targetSite}`);
+  }
 }
 
 async function loopTrialList() {
-    for (const targetTrial of targetTrialList) {
-        console.log(`Start trial(${targetTrial.siteName})`);
-        try {
-            await targetTrial.try();
-        } catch (err) {
-            console.error(err);
-        }
-        console.log(`Trial(${targetTrial.siteName}) done: ${new Date()}`);
+  for (const targetTrial of targetTrialList) {
+    console.log(`Start trial(${targetTrial.siteName})`);
+    try {
+      await targetTrial.try();
+    } catch (err) {
+      console.error(err);
     }
-    console.log(`All trial done. next trial will occur in ${config.LOGIN_TRIAL_CYCLE_MSEC / 1000} seconds`);
-    setTimeout(loopTrialList, config.LOGIN_TRIAL_CYCLE_MSEC);
+    console.log(`Trial(${targetTrial.siteName}) done: ${new Date()}`);
+  }
+  console.log(`All trial done. next trial will occur in ${config.LOGIN_TRIAL_CYCLE_MSEC / 1000} seconds`);
+  setTimeout(loopTrialList, config.LOGIN_TRIAL_CYCLE_MSEC);
 }
 
 loopTrialList();
