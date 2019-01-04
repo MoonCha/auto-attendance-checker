@@ -7,11 +7,11 @@ export async function loginInvenAndCheckAttendance(): Promise <void> {
   const browser = await puppeteer.launch(browserLaunchOption);
   const page = await browser.newPage();
   await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36');
-  await page.goto('http://hs.inven.co.kr/');
+  await page.goto('https://member.inven.co.kr/user/scorpio/mlogin');
 
-  const loginIdInput = await page.waitForSelector('input#comLeftLoginId');
+  const loginIdInput = await page.waitForSelector('input#user_id');
   await loginIdInput.type(config.INVEN_ID);
-  const loginPwInput = await page.waitForSelector('input#comLoginPassword');
+  const loginPwInput = await page.waitForSelector('input#password');
   await loginPwInput.type(config.INVEN_PASSWORD);
 
   page.on('dialog', async function (dialog) {
@@ -25,7 +25,7 @@ export async function loginInvenAndCheckAttendance(): Promise <void> {
     }
   });
 
-  const loginButton = await page.waitForSelector('#comLeftLoginForm button.btn_submit');
+  const loginButton = await page.waitForSelector('button#loginBtn');
   loginButton.click();
   await page.waitForNavigation({
     waitUntil: 'domcontentloaded',
@@ -63,10 +63,24 @@ export async function loginInvenAndCheckAttendance(): Promise <void> {
         });
       } catch (err) {
         console.error(err);
-        throw new Error('Failed to login');
+        console.error('Failed to login');
+        await browser.close();
+        return;
       }
       console.log("Maybe already got daily bonus");
       break;
+    case 'www.inven.co.kr/webzine/': {
+      const loginButton = await page.waitForSelector('a.loginButton');
+      const loginButtonHrefProperty = await loginButton.getProperty('href');
+      const href = await loginButtonHrefProperty.jsonValue() as string;
+      if (href.indexOf('logout') === -1) {
+        console.error('Failed to login');
+        await browser.close();
+        return;
+      }
+      break;
+    }
+      
     default:
       console.log(`Unexpected navigation: ${navigatedDomainWithPath}`);
       await browser.close();
