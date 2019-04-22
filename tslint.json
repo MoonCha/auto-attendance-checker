@@ -1,5 +1,5 @@
 {
-    // "extends": "tslint-config-airbnb",
+w
     "jsEnable": false,
     "rules": {
       "ter-prefer-arrow-callback": false,
