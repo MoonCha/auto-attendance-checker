@@ -38,7 +38,7 @@ RUN chmod +x /usr/local/bin/dumb-init
 ADD . /auto-attendance-checker
 RUN cd /auto-attendance-checker && npm install
 RUN cd /auto-attendance-checker && npm install puppeteer@1.8.0
-RUN npm install -g ts-node@7.0.1 typescript@3.1.1
+RUN npm install -g ts-node@7.0.1 typescript@3.8.3
 
 # TODO: find way to allow sandboxed execution
 ENV BROWSER_NO_SANDBOX true
