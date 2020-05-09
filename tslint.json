@@ -1,5 +1,4 @@
 {
-w
     "jsEnable": false,
     "rules": {
       "ter-prefer-arrow-callback": false,
