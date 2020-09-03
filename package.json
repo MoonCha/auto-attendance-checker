@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/MoonCall/coinpan-auto-login#readme",
   "dependencies": {
-    "puppeteer": "^1.8.0",
+    "puppeteer": "^1.13.0",
     "typescript": "^3.8.3"
   },
   "devDependencies": {
